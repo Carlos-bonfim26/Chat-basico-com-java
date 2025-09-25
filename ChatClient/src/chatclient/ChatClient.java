@@ -37,7 +37,7 @@ public class ChatClient {
 
                         while (true) {
                             String msg = entrada.readLine();
-                            System.out.println("Servidor: " + msg);
+                            System.out.println( msg);
                             
 
                         }

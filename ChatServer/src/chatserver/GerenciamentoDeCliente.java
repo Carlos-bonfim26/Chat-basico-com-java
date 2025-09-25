@@ -40,22 +40,36 @@ public class GerenciamentoDeCliente implements Runnable {
             clientesConectados.put(nomeCliente, this);
             while (true) {
                 message = input.readLine();
-                output.println(nomeCliente + ": " + message);
+                
                 if (message.equalsIgnoreCase("::sair")) {
                     output.println("Voce saiu do chat");
                     cliente.close();
                     break;
                 } else if (message.toLowerCase().startsWith("::msg")) {
-                    String nomedestinatario = message.split(" ")[1];
-                    System.out.println("Enviando para " + nomedestinatario);
-                    GerenciamentoDeCliente destinatario = clientesConectados.get(nomedestinatario);
-                    if (destinatario == null) {
-                        output.println("Cliente " + nomedestinatario + " nao encontrado");
+
+                    String[] parts = message.split(" ");
+
+                    if (parts.length > 2) {
+                        String nomedestinatario = parts[1];
+                        String conteudo = message.substring(6 + nomedestinatario.length()).trim();
+
+                        if (conteudo.isEmpty()) {
+                            output.println("Mensagem vazia, escreva algo após o destinatário!");
+                        } else {
+                            System.out.println("Enviando para " + nomedestinatario);
+                            GerenciamentoDeCliente destinatario = clientesConectados.get(nomedestinatario);
+
+                            if (destinatario == null) {
+                                output.println("Cliente " + nomedestinatario + " nao encontrado");
+                            } else {
+                                destinatario.getOutput().println(getNomeCliente() + ": " + conteudo);
+                                output.println(nomeCliente + ": " + conteudo);
+                            }
+                        }
                     } else {
-                        output.print("envie uma mensagem para " + nomedestinatario + ": ");
-                        destinatario.getOutput()
-                                .println(getNomeCliente() + ": " + message.substring(6 + nomedestinatario.length()));
+                        output.println("Formato inválido. Use: ::msg <destinatario> <mensagem>");
                     }
+
                 }
 
             }
@@ -70,7 +84,6 @@ public class GerenciamentoDeCliente implements Runnable {
         return output;
     }
 
-  
     public BufferedReader getInput() {
         return input;
     }
