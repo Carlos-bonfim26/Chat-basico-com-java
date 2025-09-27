@@ -21,10 +21,11 @@ public class ChatServer {
         // TODO code application logic here
         ServerSocket servidor = null;
         try {
+            //inicializando o socket do servidor
             System.out.println("ligando servidor");
             servidor = new ServerSocket(12345);
             System.out.println("servidor ligado");
-            
+            // Aceitando conexões de clientes
             while (true) {                
                 Socket cliente = servidor.accept();
                 System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
